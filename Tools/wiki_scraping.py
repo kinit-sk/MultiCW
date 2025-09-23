@@ -28,8 +28,7 @@ h_yellow = '\x1b[1;30;43m'
 class WikipediaExtractor:
     def __init__(self, verbose=True):
         self.verbose = verbose
-        print('WikiExtractor: Init splitter')
-        self.splitter = init_splitter(lang='en')
+        self.splitter = init_splitter('en')
 
         self.agent = 0
         self.wiki_api = wikipediaapi.Wikipedia(user_agent=f'veraAI (user{self.agent}@kinit.sk)',
@@ -209,7 +208,7 @@ class WikipediaExtractor:
         try:
             # Translate to English for splitting and cleanup
             target_lang = 'zh-CN' if lang == 'zh' else lang
-            text_en = deeptranslate([text], target_lang, 'en', False)[0]
+            text_en = deeptranslate(pd.Series([text]), target_lang, 'en', False)[0]
 
             # Remove in-line citations and references section
             text_en = re.sub(r'\[.*?]', '', text_en)
@@ -228,7 +227,7 @@ class WikipediaExtractor:
             sentences_en = [s for s in sentences_en if s and s.strip()]
             # Translate split sentences back to the original language
             if sentences_en:
-                sentences = parallel_deeptranslate(sentences_en, 'en', target_lang, False)
+                sentences = deeptranslate(sentences_en, 'en', target_lang, False)
                 return sentences, sentences_en
             else:
                 return [], []

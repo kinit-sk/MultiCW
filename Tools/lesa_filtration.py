@@ -9,7 +9,6 @@ from pandas import DataFrame
 from ollama import chat
 from ollama import ChatResponse
 
-from Tools.preprocess import h_green
 
 # Enable tqdm for pandas
 tqdm.pandas()
