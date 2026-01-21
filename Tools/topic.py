@@ -15,35 +15,30 @@ def extract_topics(claims: Series, model='gemma3:4b', show_progress=True):
     results = []
     for row in iterator:
         # Extract accumulate topics from each claim
-        attempts = 0
-        while attempts < 2:
-            attempts += 1
+        detected = 'unknown'
+        try:
+            response = ollama.chat(
+                model=model,
+                messages=[
+                    {"role": "system", "content": prompt},
+                    {"role": "user", "content": row}
+                ],
+                options={
+                    "temperature": 0.1
+                }
+            )
+            result = response['message']['content'].strip().lower()
 
-            try:
-                response = ollama.chat(
-                    model=model,
-                    messages=[
-                        {"role": "system", "content": prompt},
-                        {"role": "user", "content": row}
-                    ],
-                    options={
-                        "temperature": 0.1
-                    }
-                )
-                result = response['message']['content'].strip().lower()
+            # Store any category found in the result
+            for category in categories:
+                if category in result:
+                    detected = category
+                    break
 
-                # Store any category found in the result
-                detected = 'unknown'
-                for category in categories:
-                    if category in result:
-                        detected = category
-                        break
-                results.append(detected)
-                break
+        except Exception as err:
+            print(f"Error: {str(err)}")
 
-            # In case of error just try again
-            except Exception as err:
-                print(f"Error: {str(err)}")
+        results.append(detected)
 
     # If no category was found after all the attempts, consider it 'unknown'
     return results
@@ -52,3 +47,5 @@ if __name__=='__main__':
     # Topic extraction
     claim = pd.Series(['Dr. Wingsley just finished the operation', 'Dr. Wingsley just finished the operation'], copy=False)
     print(extract_topics(claim))
+
+

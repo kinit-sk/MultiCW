@@ -93,7 +93,4 @@ python -m spacy download en_core_web_sm
 ```
 
 ## Acknowledge
-```To be added after the paper publication.```
-
-## Contact
-```To be added after the paper publication.```
+This work was partially supported by the European Union under the Horizon Europe projects: \textit{vera.ai} (GA No. \href{https://doi.org/10.3030/101070093}{101070093}), and by \textit{AI-CODE} (GA No. \href{https://cordis.europa.eu/project/id/101135437}{101135437}); and by EU NextGenerationEU through the Recovery and Resilience Plan for Slovakia under the project No. 09I01-03-V04-00006.
